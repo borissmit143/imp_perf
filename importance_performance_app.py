@@ -209,23 +209,45 @@ def attribute_summary(results: pd.DataFrame, attributes: list[str]) -> pd.DataFr
 def plot_ipa(summary: pd.DataFrame, service_name: str):
     average_importance = summary["Average Importance"].mean()
     average_performance = summary["Average Performance"].mean()
-    figure, axis = plt.subplots(figsize=(12, 8))
-    axis.scatter(
-        summary["Average Importance"], summary["Average Performance"],
-        s=95, color="#2563eb", edgecolor="white", linewidth=0.8, zorder=3,
-    )
+    figure, axis = plt.subplots(figsize=(16, 9))
+    colors = plt.get_cmap("tab20").colors
+
     for number, row in summary.reset_index(drop=True).iterrows():
+        color = colors[number % len(colors)]
+        axis.scatter(
+            row["Average Importance"],
+            row["Average Performance"],
+            s=115,
+            color=color,
+            edgecolor="white",
+            linewidth=0.9,
+            zorder=3,
+            label=f"{number + 1}. {row['Attribute']}",
+        )
         axis.annotate(
             str(number + 1),
             (row["Average Importance"], row["Average Performance"]),
             ha="center", va="center", color="white", fontsize=8, fontweight="bold",
         )
-    axis.axvline(average_importance, color="#dc2626", linestyle="--", label=f"Mean importance: {average_importance:.2f}")
-    axis.axhline(average_performance, color="#16a34a", linestyle="--", label=f"Mean performance: {average_performance:.2f}")
+    axis.axvline(
+        average_importance, color="#dc2626", linestyle="--",
+        label=f"Mean importance: {average_importance:.2f}",
+    )
+    axis.axhline(
+        average_performance, color="#16a34a", linestyle="--",
+        label=f"Mean performance: {average_performance:.2f}",
+    )
     axis.set(xlim=(0.5, 10.5), ylim=(0.5, 10.5), xlabel="Importance", ylabel="Performance")
     axis.set_title(f"Importance-Performance Analysis: {service_name}")
     axis.grid(alpha=0.2)
-    axis.legend(loc="lower left")
+    axis.legend(
+        title="Attributes",
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        fontsize=8,
+        title_fontsize=10,
+        frameon=True,
+    )
     figure.tight_layout()
     return figure
 
