@@ -16,7 +16,7 @@ from pydantic import BaseModel, Field
 
 APP_DIR = Path(__file__).resolve().parent
 DEFAULT_USERS_FILE = APP_DIR / "users.xlsx"
-MODEL_NAME = "gemini-2.5-flash-lite"
+MODEL_NAME = "gemini-3.1-flash-lite"
 
 
 class TwinRatings(BaseModel):
